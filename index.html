@@ -4,130 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulação SAEP</title>
-    <style>
-      body {
-        font-family: Segoe UI;
-        background-color: #FFFFFF;
-        margin: 0;
-        padding: 0;
-      }
-     
-      /* navegação */
-      nav {
-        background-color: #0056b3;
-        padding: 10px;
-        display: flex;
-        gap: 5px;
-        align-items: center;
-      }
-      nav span {
-        color: white;
-        font-weight: bold;
-        font-size: 18px;
-        margin-right: 10px;
-      }
-      nav button {
-        background-color: #0056b3;
-        color: white;
-        border: none;
-        padding: 8px 14px;
-        cursor: pointer;
-        border-radius: 4px;
-        font-size: 14px;
-      }
-      nav button:hover { background-color: #0056b3; }
-      nav button.ativo  { background-color: #000000; }
-     
-      .pagina { display: none; padding: 20px; }
-      .pagina.ativo { display: block; }
-     
-      h2 {
-        color: #000000;
-        border-bottom: 2px solid #000000;
-        padding-bottom: 6px;
-        margin-top: 0;
-      }
-     
-      .caixa {
-        background: white;
-        padding: 20px;
-        border-radius: 6px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.0);
-        max-width: 500px;
-        margin-bottom: 20px;
-      }
-      .campo { margin-bottom: 12px; }
-      .campo label {
-        display: block;
-        margin-bottom: 4px;
-        font-weight: bold;
-        color: #000000;
-        font-size: 14px;
-      }
-      .campo input,
-      .campo select,
-      .campo textarea {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 14px;
-        box-sizing: border-box;
-      }
-      .campo textarea { height: 70px; resize: vertical; }
-     
-      .btn { padding: 9px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
-      .btn-salvar  { background-color: #27ae60; color: white; }
-      .btn-salvar:hover  { background-color: #219150; }
-      .btn-editar  { background-color: #000000; color: white; padding: 5px 10px; font-size: 12px; }
-      .btn-excluir { background-color: #e74c3c; color: white; padding: 5px 10px; font-size: 12px; }
-      .btn-cancelar{ background-color: #95a5a6; color: white; }
-     
-      .msg-sucesso {
-        background-color: #d4edda; color: #155724;
-        border: 1px solid #c3e6cb;
-        padding: 10px; border-radius: 4px; margin-bottom: 12px; display: none;
-      }
-      .msg-erro {
-        background-color: #f8d7da; color: #721c24;
-        border: 1px solid #f5c6cb;
-        padding: 10px; border-radius: 4px; margin-bottom: 12px; display: none;
-      }
-     
-      table { width: 100%; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
-      th { background-color: #2c3e50; color: white; padding: 10px; text-align: left; font-size: 14px; }
-      td { padding: 9px 10px; border-bottom: 1px solid #eee; font-size: 14px; }
-      tr:last-child td { border-bottom: none; }
-      tr:hover td { background-color: #f9f9f9; }
-     
-      /* kanban */
-      .kanban { display: flex; gap: 15px; align-items: flex-start; }
-      .coluna { flex: 1; background: white; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.15); overflow: hidden; min-width: 220px; }
-      .coluna-titulo { padding: 12px; font-weight: bold; font-size: 15px; color: white; display: flex; justify-content: space-between; align-items: center; }
-      .col-afazer  .coluna-titulo { background-color: #7f8c8d; }
-      .col-fazendo .coluna-titulo { background-color: #000000; }
-      .col-pronto  .coluna-titulo { background-color: #27ae60; }
-      .coluna-cards { padding: 10px; min-height: 100px; }
-     
-      .card { background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin-bottom: 8px; }
-      .card-desc { font-weight: bold; font-size: 14px; margin-bottom: 5px; }
-      .card-info { font-size: 12px; color: #555; margin-bottom: 3px; }
-      .prioridade { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-top: 4px; }
-      .p-alta  { background: #f8d7da; color: #721c24; }
-      .p-media { background: #fff3cd; color: #856404; }
-      .p-baixa { background: #d1ecf1; color: #0c5460; }
-      .card-acoes { margin-top: 8px; display: flex; gap: 5px; align-items: center; }
-      .card-acoes select { font-size: 12px; padding: 3px 5px; border: 1px solid #ccc; border-radius: 4px; flex: 1; }
-     
-      /* modal */
-      .modal-fundo { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
-      .modal-fundo.aberto { display: flex; }
-      .modal-caixa { background: white; padding: 24px; border-radius: 6px; width: 90%; max-width: 460px; max-height: 90vh; overflow-y: auto; }
-      .modal-caixa h3 { margin-top: 0; color: #2c3e50; }
-      .modal-acoes { display: flex; gap: 10px; margin-top: 15px; justify-content: flex-end; }
-     
-      @media (max-width: 700px) { .kanban { flex-direction: column; } }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav>
@@ -137,7 +14,6 @@
     <button onclick="irPara('nova-tarefa')">Nova Tarefa</button>
   </nav>
    
-  <!-- TAREFAS -->
   <div id="pagina-tarefas" class="pagina ativo">
     <h2>Gerenciamento de Tarefas</h2>
     <div class="kanban">
@@ -156,7 +32,6 @@
     </div>
   </div>
    
-  <!-- USUARIOS -->
   <div id="pagina-usuarios" class="pagina">
     <h2>Cadastro de Usuários</h2>
     <div class="caixa">
@@ -180,7 +55,6 @@
     </table>
   </div>
    
-  <!-- NOVA TAREFA -->
   <div id="pagina-nova-tarefa" class="pagina">
     <h2 id="titulo-form-tarefa">Cadastro de Tarefa</h2>
     <div class="caixa">
@@ -223,7 +97,6 @@
     </div>
   </div>
    
-  <!-- MODAL EDITAR -->
   <div class="modal-fundo" id="modal-editar">
     <div class="modal-caixa">
       <h3>Editar Tarefa</h3>
@@ -255,7 +128,6 @@
     </div>
   </div>
    
-  <!-- MODAL CONFIRMAR EXCLUSÃO -->
   <div class="modal-fundo" id="modal-confirmar">
     <div class="modal-caixa" style="max-width:360px">
       <h3>Confirmar Exclusão</h3>
@@ -267,311 +139,6 @@
       </div>
     </div>
   </div>
-
-  <script>
-    // ====================== DADOS E ARMAZENAMENTO ======================
-    let usuarios = [];
-    let tarefas = [];
-    
-    function carregarDados() {
-        const usuariosSalvos = localStorage.getItem('saep_usuarios');
-        const tarefasSalvas = localStorage.getItem('saep_tarefas');
-        
-        if (usuariosSalvos) usuarios = JSON.parse(usuariosSalvos);
-        if (tarefasSalvas) tarefas = JSON.parse(tarefasSalvas);
-    }
-    
-    function salvarDados() {
-        localStorage.setItem('saep_usuarios', JSON.stringify(usuarios));
-        localStorage.setItem('saep_tarefas', JSON.stringify(tarefas));
-    }
-    
-    // ====================== NAVEGAÇÃO ======================
-    function irPara(pagina) {
-        document.querySelectorAll('.pagina').forEach(p => p.classList.remove('ativo'));
-        document.getElementById(`pagina-${pagina}`).classList.add('ativo');
-        
-        document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('ativo'));
-        
-        const botoes = document.querySelectorAll('nav button');
-        for (let btn of botoes) {
-            if (btn.getAttribute('onclick') === `irPara('${pagina}')`) {
-                btn.classList.add('ativo');
-                break;
-            }
-        }
-    
-        if (pagina === 'tarefas') renderizarKanban();
-    }
-    
-    // ====================== USUÁRIOS ======================
-    function salvarUsuario() {
-        const nome = document.getElementById('u-nome').value.trim();
-        const email = document.getElementById('u-email').value.trim();
-        
-        const msgOk = document.getElementById('msg-usuario-ok');
-        const msgErro = document.getElementById('msg-usuario-erro');
-        
-        if (!nome || !email) {
-            msgErro.textContent = "Nome e e-mail são obrigatórios!";
-            msgErro.style.display = 'block';
-            msgOk.style.display = 'none';
-            return;
-        }
-        
-        const novoUsuario = {
-            id: Date.now(),
-            nome: nome,
-            email: email
-        };
-        
-        usuarios.push(novoUsuario);
-        salvarDados();
-        renderizarListaUsuarios();
-        
-        // Limpar formulário
-        document.getElementById('u-nome').value = '';
-        document.getElementById('u-email').value = '';
-        
-        msgOk.style.display = 'block';
-        msgErro.style.display = 'none';
-        
-        setTimeout(() => msgOk.style.display = 'none', 3000);
-    }
-    
-    function renderizarListaUsuarios() {
-        const tbody = document.getElementById('lista-usuarios');
-        tbody.innerHTML = '';
-        
-        usuarios.forEach(user => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${user.id}</td>
-                <td>${user.nome}</td>
-                <td>${user.email}</td>
-                <td>
-                    <button class="btn btn-excluir" onclick="excluirUsuario(${user.id})">Excluir</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-    
-    function excluirUsuario(id) {
-        if (confirm('Excluir este usuário?')) {
-            usuarios = usuarios.filter(u => u.id !== id);
-            salvarDados();
-            renderizarListaUsuarios();
-        }
-    }
-    
-    // ====================== TAREFAS ======================
-    function salvarTarefa() {
-        const id = document.getElementById('t-id').value;
-        const desc = document.getElementById('t-desc').value.trim();
-        const usuarioId = document.getElementById('t-usuario').value;
-        const setor = document.getElementById('t-setor').value.trim();
-        const prioridade = document.getElementById('t-prioridade').value;
-        const status = document.getElementById('t-status').value;
-        
-        const msgOk = document.getElementById('msg-tarefa-ok');
-        const msgErro = document.getElementById('msg-tarefa-erro');
-        
-        if (!desc || !usuarioId || !prioridade) {
-            msgErro.textContent = "Descrição, usuário e prioridade são obrigatórios!";
-            msgErro.style.display = 'block';
-            msgOk.style.display = 'none';
-            return;
-        }
-        
-        if (id) {
-            // Edição
-            const tarefa = tarefas.find(t => t.id == id);
-            if (tarefa) {
-                tarefa.desc = desc;
-                tarefa.usuarioId = parseInt(usuarioId);
-                tarefa.setor = setor;
-                tarefa.prioridade = prioridade;
-                tarefa.status = status;
-            }
-        } else {
-            // Nova tarefa
-            const novaTarefa = {
-                id: Date.now(),
-                desc: desc,
-                usuarioId: parseInt(usuarioId),
-                setor: setor,
-                prioridade: prioridade,
-                status: status
-            };
-            tarefas.push(novaTarefa);
-        }
-        
-        salvarDados();
-        renderizarKanban();
-        limparFormTarefa();
-        
-        msgOk.style.display = 'block';
-        msgErro.style.display = 'none';
-        
-        setTimeout(() => msgOk.style.display = 'none', 2500);
-    }
-    
-    function limparFormTarefa() {
-        document.getElementById('t-id').value = '';
-        document.getElementById('t-desc').value = '';
-        document.getElementById('t-usuario').value = '';
-        document.getElementById('t-setor').value = '';
-        document.getElementById('t-prioridade').value = '';
-        document.getElementById('t-status').value = 'a fazer';
-        document.getElementById('titulo-form-tarefa').textContent = 'Cadastro de Tarefa';
-    }
-    
-    function renderizarKanban() {
-        const colunas = {
-            'a fazer': document.getElementById('cards-afazer'),
-            'fazendo': document.getElementById('cards-fazendo'),
-            'pronto': document.getElementById('cards-pronto')
-        };
-        
-        // Limpar colunas
-        Object.values(colunas).forEach(col => col.innerHTML = '');
-        
-        const counts = { 'a fazer': 0, 'fazendo': 0, 'pronto': 0 };
-        
-        tarefas.forEach(tarefa => {
-            const usuario = usuarios.find(u => u.id === tarefa.usuarioId);
-            const nomeUsuario = usuario ? usuario.nome : 'Usuário não encontrado';
-            
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="card-desc">${tarefa.desc}</div>
-                <div class="card-info"><strong>Responsável:</strong> ${nomeUsuario}</div>
-                <div class="card-info"><strong>Setor:</strong> ${tarefa.setor || '-'}</div>
-                <span class="prioridade p-${tarefa.prioridade}">${tarefa.prioridade.toUpperCase()}</span>
-                
-                <div class="card-acoes">
-                    <select onchange="mudarStatus(${tarefa.id}, this.value)">
-                        <option value="a fazer" ${tarefa.status === 'a fazer' ? 'selected' : ''}>A Fazer</option>
-                        <option value="fazendo" ${tarefa.status === 'fazendo' ? 'selected' : ''}>Fazendo</option>
-                        <option value="pronto" ${tarefa.status === 'pronto' ? 'selected' : ''}>Pronto</option>
-                    </select>
-                    <button class="btn btn-editar" onclick="editarTarefa(${tarefa.id})">✏️</button>
-                    <button class="btn btn-excluir" onclick="confirmarExclusao(${tarefa.id})">🗑️</button>
-                </div>
-            `;
-            
-            colunas[tarefa.status].appendChild(card);
-            counts[tarefa.status]++;
-        });
-        
-        // Atualizar contadores
-        document.getElementById('count-afazer').textContent = counts['a fazer'];
-        document.getElementById('count-fazendo').textContent = counts['fazendo'];
-        document.getElementById('count-pronto').textContent = counts['pronto'];
-    }
-    
-    function mudarStatus(id, novoStatus) {
-        const tarefa = tarefas.find(t => t.id === id);
-        if (tarefa) {
-            tarefa.status = novoStatus;
-            salvarDados();
-            renderizarKanban();
-        }
-    }
-    
-    function editarTarefa(id) {
-        const tarefa = tarefas.find(t => t.id === id);
-        if (!tarefa) return;
-        
-        document.getElementById('me-id').value = tarefa.id;
-        document.getElementById('me-desc').value = tarefa.desc;
-        document.getElementById('me-setor').value = tarefa.setor || '';
-        document.getElementById('me-prioridade').value = tarefa.prioridade;
-        document.getElementById('me-status').value = tarefa.status;
-        
-        // Preencher select de usuários no modal
-        const select = document.getElementById('me-usuario');
-        select.innerHTML = '<option value="">Selecione um usuário...</option>';
-        usuarios.forEach(user => {
-            const opt = document.createElement('option');
-            opt.value = user.id;
-            opt.textContent = user.nome;
-            if (user.id === tarefa.usuarioId) opt.selected = true;
-            select.appendChild(opt);
-        });
-        
-        document.getElementById('modal-editar').classList.add('aberto');
-    }
-    
-    function atualizarTarefa() {
-        const id = parseInt(document.getElementById('me-id').value);
-        const tarefa = tarefas.find(t => t.id === id);
-        
-        if (tarefa) {
-            tarefa.desc = document.getElementById('me-desc').value.trim();
-            tarefa.usuarioId = parseInt(document.getElementById('me-usuario').value);
-            tarefa.setor = document.getElementById('me-setor').value.trim();
-            tarefa.prioridade = document.getElementById('me-prioridade').value;
-            tarefa.status = document.getElementById('me-status').value;
-            
-            salvarDados();
-            fecharModal('modal-editar');
-            renderizarKanban();
-        }
-    }
-    
-    function confirmarExclusao(id) {
-        document.getElementById('id-excluir').value = id;
-        document.getElementById('modal-confirmar').classList.add('aberto');
-    }
-    
-    function excluirTarefa() {
-        const id = parseInt(document.getElementById('id-excluir').value);
-        tarefas = tarefas.filter(t => t.id !== id);
-        salvarDados();
-        fecharModal('modal-confirmar');
-        renderizarKanban();
-    }
-    
-    function fecharModal(modalId) {
-        document.getElementById(modalId).classList.remove('aberto');
-    }
-    
-    // ====================== PREENCHER SELECTS ======================
-    function preencherSelectUsuarios() {
-        const selects = ['t-usuario', 'me-usuario'];
-        selects.forEach(id => {
-            const select = document.getElementById(id);
-            if (!select) return;
-            
-            select.innerHTML = '<option value="">Selecione um usuário...</option>';
-            usuarios.forEach(user => {
-                const opt = document.createElement('option');
-                opt.value = user.id;
-                opt.textContent = user.nome;
-                select.appendChild(opt);
-            });
-        });
-    }
-    
-    // ====================== INICIALIZAÇÃO ======================
-    window.onload = function() {
-        carregarDados();
-        renderizarListaUsuarios();
-        preencherSelectUsuarios();
-        renderizarKanban();
-        
-        // Fechar modais ao clicar fora
-        document.querySelectorAll('.modal-fundo').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.classList.remove('aberto');
-                }
-            });
-        });
-    };
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>
